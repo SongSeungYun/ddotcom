@@ -1,0 +1,24 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  data:
+    mongodb:
+      uri: ${DB_URL}
+      auto-index-creation: true  # 인덱스 자동 생성 설정 추가
+
+logging:
+  pattern:
+    console: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
+  level:
+    org:
+      springframework:
+        data:
+          mongodb: DEBUG
+      mongodb: DEBUG
