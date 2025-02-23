@@ -1,0 +1,54 @@
+package ddotcom.ddotcom.member.entity
+
+import ddotcom.ddotcom.common.status.Gender
+//import ddotcom.ddotcom.common.status.ROLE
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.Indexed
+import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.mongodb.core.mapping.Field
+import org.springframework.data.mongodb.core.mapping.FieldType
+import org.springframework.data.mongodb.core.mapping.MongoId
+
+//import java.time.LocalDate
+//import java.time.format.DateTimeFormatter
+
+@Document(collection = "member_info")
+class Member(
+    @MongoId(FieldType.OBJECT_ID)
+    var _id: String? = null,  // MongoDB 자체 ID
+
+    @Indexed(unique = true)
+    @Field("memberId")        // 사용자 정의 고유번호
+    val memberId: String,     // 예: M20240001
+
+    @Indexed(unique = true)
+    @Field("loginId")
+    val loginId: String,      // 로그인용 ID
+
+    @Field("password")
+    val password: String,
+
+    @Field("name")
+    val name: String,
+
+    @Field("gender")
+    val gender: Gender,
+
+    @Field("phoneNumber")
+    val phoneNumber: String,
+
+    @Field("email")
+    val email: String,
+
+    @Field("university")
+    val university: String,
+
+    @Field("dormitory")
+    val dormitory: String,
+
+    @Field("bankAccount")
+    val bankAccount: String,
+
+    @Field("bankName")
+    val bankName: String
+)

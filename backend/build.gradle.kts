@@ -3,7 +3,9 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.4.2"
 	id("io.spring.dependency-management") version "1.1.7"
-	kotlin("plugin.jpa") version "1.9.25"
+	kotlin("plugin.serialization") version "1.9.25"
+
+	id("org.jetbrains.kotlin.plugin.noarg") version "1.9.25"
 }
 
 group = "ddotcom"
@@ -20,10 +22,11 @@ repositories {
 }
 
 dependencies {
+	//mongodb atlas
 	implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.3.0")
 	implementation("org.mongodb:bson-kotlinx:5.3.0")
-	//위에거는 mongodb atlas 쓸라고 추가한거임
 	//implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("io.github.cdimascio:dotenv-kotlin:6.5.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -41,13 +44,11 @@ kotlin {
 }
 
 allOpen {
-	annotation("jakarta.persistence.Entity")
-	annotation("jakarta.persistence.MappedSuperclass")
-	annotation("jakarta.persistence.Embeddable")
-}
+	annotation("org.springframework.data.mongodb.core.mapping.Document")
+ }
 
-noArg{
-	annotation("jakarta.persistence.Entity")
+noArg {
+	annotation("org.springframework.data.mongodb.core.mapping.Document")
 }
 
 tasks.withType<Test> {
