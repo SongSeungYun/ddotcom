@@ -1,8 +1,8 @@
-package ddotcom.ddotcom.member.service
+package ddotcom.ddotcom.service
 
-//import ddotcom.ddotcom.common.dbconfig.MultipleMongoConfig
-import ddotcom.ddotcom.member.dto.MemberDtoRequest
-import ddotcom.ddotcom.member.entity.Member
+//import ddotcom.ddotcom.database.MultipleMongoConfig
+import ddotcom.ddotcom.dto.MemberDtoRequest
+import ddotcom.ddotcom.entity.Member
 //import ddotcom.ddotcom.member.repository.MemberRepository
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class MemberService(
     @Qualifier("memberMongoTemplate") private val memberMongoTemplate: MongoTemplate,
-    //@Qualifier("productMongoTemplate") private val productMongoTemplate: MongoTemplate
+    @Qualifier("productMongoTemplate") private val productMongoTemplate: MongoTemplate
 )
 {
     //Id중복 확인

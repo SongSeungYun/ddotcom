@@ -1,6 +1,6 @@
 package ddotcom.ddotcom.member.repository
 
-import ddotcom.ddotcom.member.entity.Member
+import ddotcom.ddotcom.entity.Member
 import org.springframework.data.mongodb.repository.MongoRepository
 
 interface MemberRepository : MongoRepository<Member, String> {

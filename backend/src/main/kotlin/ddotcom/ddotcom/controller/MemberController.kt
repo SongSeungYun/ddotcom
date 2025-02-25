@@ -1,11 +1,9 @@
-package ddotcom.ddotcom.member.controller
+package ddotcom.ddotcom.controller
 
-import ddotcom.ddotcom.member.dto.MemberDtoRequest
-import ddotcom.ddotcom.member.entity.Member
-import ddotcom.ddotcom.member.service.MemberService
+import ddotcom.ddotcom.dto.MemberDtoRequest
+import ddotcom.ddotcom.service.MemberService
 import org.springframework.web.bind.annotation.*
 //밑에는 홍길동 이름가진애들 삭제하려고 만들었음
-import org.springframework.http.ResponseEntity
 
 
 @RequestMapping("/api/member")

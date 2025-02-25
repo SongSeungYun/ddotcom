@@ -12,6 +12,12 @@ spring:
     mongodb:
       uri: ${DB_URL}
       auto-index-creation: true  # 인덱스 자동 생성 설정 추가
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 
 logging:
   pattern:

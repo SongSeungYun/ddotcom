@@ -1,8 +1,7 @@
-package ddotcom.ddotcom.member.entity
+package ddotcom.ddotcom.entity
 
 import ddotcom.ddotcom.common.status.Gender
 //import ddotcom.ddotcom.common.status.ROLE
-import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
