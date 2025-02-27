@@ -1,15 +1,15 @@
 package ddotcom.ddotcom.controller
 
 import ddotcom.ddotcom.dto.MemberDtoRequest
+import ddotcom.ddotcom.service.EmailService
 import ddotcom.ddotcom.service.MemberService
 import org.springframework.web.bind.annotation.*
-//밑에는 홍길동 이름가진애들 삭제하려고 만들었음
-
 
 @RequestMapping("/api/member")
 @RestController
 class MemberController(
-    private val memberService: MemberService
+    private val memberService: MemberService,
+    private val emailService: EmailService
 ) {
     //회원가입
     @PostMapping("/signup")

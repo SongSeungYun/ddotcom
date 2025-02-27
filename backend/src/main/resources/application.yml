@@ -8,6 +8,8 @@ server:
       force: true
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
   data:
     mongodb:
       uri: ${DB_URL}
@@ -16,8 +18,20 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
-      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
-      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+  #    - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+  #    - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+  mail:
+    host: smtp.gmail.com  # Gmail의 SMTP 서버 호스트
+    port: 587 # Gmail SMTP 서버는 587번 포트를 사용
+    username: ${MAIL_APP_USERNAME}
+    password: ${MAIL_APP_PW}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          debug: true
+          connectiontimeout: 5000 # 연결 타임아웃 (ms)
+          starttls.enable: true # TLS 활성화 여부
 
 logging:
   pattern:

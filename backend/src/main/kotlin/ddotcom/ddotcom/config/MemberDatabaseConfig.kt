@@ -1,34 +1,40 @@
-package ddotcom.ddotcom.database
+package ddotcom.ddotcom.config
+
 //import com.mongodb.MongoClientSettings
-import com.mongodb.client.MongoClient
+import com.mongodb.ConnectionString
 import com.mongodb.client.MongoClients
 import io.github.cdimascio.dotenv.dotenv
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.data.mongodb.MongoDatabaseFactory
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory
-import org.springframework.data.mongodb.core.convert.DbRefResolver
 import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext
+
 @Configuration
-class ProductDatabaseConfig(
+class MemberDatabaseConfig(
     private val mongoMappingContext: MongoMappingContext
 ) {
+    @Value("\${spring.data.mongodb.uri}")
+    private lateinit var mongoUri: String
 
-    @Bean(name = ["productDatabaseFactory"])
-    fun productDatabaseFactory(): MongoDatabaseFactory {
-        val dotenv = dotenv()
-        return SimpleMongoClientDatabaseFactory(MongoClients.create(dotenv["DB_URL"]), "product")
+    @Primary
+    @Bean(name = ["memberDatabaseFactory"])
+    fun memberDatabaseFactory(): MongoDatabaseFactory {
+        //val dotenv = dotenv()
+        return SimpleMongoClientDatabaseFactory(MongoClients.create(ConnectionString(mongoUri)), "member")
     }
 
-    @Bean(name = ["productMappingMongoConverter"])
-    fun productMappingMongoConverter(
-        @Qualifier("productDatabaseFactory") mongoDatabaseFactory: MongoDatabaseFactory
+    @Primary
+    @Bean(name = ["memberMappingMongoConverter"])
+    fun memberMappingMongoConverter(
+        @Qualifier("memberDatabaseFactory") mongoDatabaseFactory: MongoDatabaseFactory
     ): MappingMongoConverter {
         val dbRefResolver = DefaultDbRefResolver(mongoDatabaseFactory)
         val converter = MappingMongoConverter(dbRefResolver, mongoMappingContext)
@@ -36,10 +42,11 @@ class ProductDatabaseConfig(
         return converter
     }
 
-    @Bean(name = ["productMongoTemplate"])
-    fun productMongoTemplate(
-        @Qualifier("productDatabaseFactory") mongoDatabaseFactory: MongoDatabaseFactory,
-        @Qualifier("productMappingMongoConverter") mappingMongoConverter: MappingMongoConverter
+    @Primary
+    @Bean(name = ["memberMongoTemplate"])
+    fun memberMongoTemplate(
+        @Qualifier("memberDatabaseFactory") mongoDatabaseFactory: MongoDatabaseFactory,
+        @Qualifier("memberMappingMongoConverter") mappingMongoConverter: MappingMongoConverter
     ): MongoTemplate {
         return MongoTemplate(mongoDatabaseFactory, mappingMongoConverter)
     }
