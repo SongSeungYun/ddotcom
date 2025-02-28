@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 
 data class ResponseWrapper<T>(
-    @JsonIgnore val request: HttpServletRequest,
+    @JsonIgnore val request: HttpServletRequest?=null,
     val status: HttpStatus,
     val success: Boolean,
     val message: String,
