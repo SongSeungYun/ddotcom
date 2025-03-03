@@ -1,6 +1,6 @@
 package ddotcom.ddotcom.common.status
 
-enum class ErrorCode(val code: String, val description: String) {
+enum class ErrorCode(val code: String, val message: String) {
     BAD_REQUEST("400", "잘못된 요청"),
     UNAUTHORIZED("401", "인증되지 않은 사용자"),
     FORBIDDEN("403", "접근 권한 없음"),

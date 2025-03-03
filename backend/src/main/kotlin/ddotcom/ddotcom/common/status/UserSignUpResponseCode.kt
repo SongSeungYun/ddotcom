@@ -1,3 +1,4 @@
+//메일 발송 때 쓰는거임
 package ddotcom.ddotcom.common.status
 
 enum class UserSignUpResponseCode(val code: Int, val message: String) {

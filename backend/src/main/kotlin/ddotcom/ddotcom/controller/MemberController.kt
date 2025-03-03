@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/member")
 @RestController
 class MemberController(
-    private val memberService: MemberService,
-    private val emailService: EmailService
+    private val memberService: MemberService
 ) {
     //회원가입
     @PostMapping("/signup")

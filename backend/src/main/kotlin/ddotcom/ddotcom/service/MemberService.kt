@@ -22,6 +22,11 @@ class MemberService(
         return memberMongoTemplate.findOne(query, Member::class.java, "member_info")
     }
 
+
+    //
+//    fun makeMember(): MemberDtoRequest{
+//
+//    }
     //회원가입
     fun signUp(memberDtoRequest: MemberDtoRequest): String {
         var member: Member? = findMemberByLoginId(memberDtoRequest.loginId)
@@ -30,17 +35,13 @@ class MemberService(
         }
         member = Member(
             _id = null,  // MongoDB는 자동으로 _id 생성
-            memberId = memberDtoRequest.memberId,
             loginId = memberDtoRequest.loginId,
             password = memberDtoRequest.password,
             name = memberDtoRequest.name,
-            gender = memberDtoRequest.gender,
             phoneNumber = memberDtoRequest.phoneNumber,
             email = memberDtoRequest.email,
             university = memberDtoRequest.university,
             dormitory = memberDtoRequest.dormitory,
-            bankAccount = memberDtoRequest.bankAccount,
-            bankName = memberDtoRequest.bankName
         )
         memberMongoTemplate.save(member, "member_info")
 

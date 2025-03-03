@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class University(
     @Id
     val id: String? = null,
-    val EmailDomatin: String,
+    val emailDomain: String,
     val name: String,
     val dormitories: List<String> // 기숙사 이름 리스트
 )

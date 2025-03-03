@@ -1,6 +1,5 @@
 package ddotcom.ddotcom.entity
 
-import ddotcom.ddotcom.common.status.Gender
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
@@ -16,10 +15,6 @@ class Member(
     var _id: String? = null,  // MongoDB 자체 ID
 
     @Indexed(unique = true)
-    @Field("memberId")        // 사용자 정의 고유번호
-    val memberId: String,     // 예: M20240001
-
-    @Indexed(unique = true)
     @Field("loginId")
     val loginId: String,      // 로그인용 ID
 
@@ -28,9 +23,6 @@ class Member(
 
     @Field("name")
     val name: String,
-
-    @Field("gender")
-    val gender: Gender,
 
     @Field("phoneNumber")
     val phoneNumber: String,
@@ -42,11 +34,5 @@ class Member(
     val university: String,
 
     @Field("dormitory")
-    val dormitory: String,
-
-    @Field("bankAccount")
-    val bankAccount: String,
-
-    @Field("bankName")
-    val bankName: String
+    val dormitory: String
 )
