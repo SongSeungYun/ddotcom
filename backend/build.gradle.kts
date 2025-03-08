@@ -42,6 +42,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	//redis
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	//시큐리티
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	//jwt
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 }
 
 kotlin {

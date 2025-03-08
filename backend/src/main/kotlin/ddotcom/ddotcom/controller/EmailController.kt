@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/email")
+@CrossOrigin(origins = ["http://localhost:5173"])
 class EmailController(
     private val emailService: EmailService,
 ) {

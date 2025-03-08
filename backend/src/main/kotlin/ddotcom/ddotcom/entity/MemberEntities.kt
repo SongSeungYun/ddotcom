@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId
 //import java.time.format.DateTimeFormatter
 
 @Document(collection = "member_info")
-class Member(
+data class Member(
     @MongoId(FieldType.OBJECT_ID)
     var _id: String? = null,  // MongoDB 자체 ID
 

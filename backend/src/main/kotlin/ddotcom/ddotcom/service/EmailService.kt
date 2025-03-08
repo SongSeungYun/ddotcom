@@ -19,7 +19,8 @@ import org.thymeleaf.context.Context
 class EmailService(
     private val emailSender: JavaMailSender,
     private val templateEngine: TemplateEngine,
-    private val redisService: RedisService
+    private val redisService: RedisService,
+    private val univService: UnivService
 ) {
 
     @Value("\${spring.mail.username}")
@@ -92,7 +93,22 @@ class EmailService(
         }
         return key.toString()
     }
+    /**
+     * 이메일 인증 코드 확인 및 대학교 매핑 로직 추가
+     */
+    fun verifyEmailCodeAndMapUniversity(email: String, code: String): Pair<Boolean, String?> {
+        val userMailCode = redisService.getData(email)
 
+        if (userMailCode != code) {
+            return Pair(false, null) // 인증 실패 시 false 반환
+        }
+
+        // 이메일 도메인 추출 및 대학교 매핑
+        val emailDomain = email.substringAfter("@")
+        val university = univService.findUniversityByEmailDomain(emailDomain)
+
+        return Pair(true, university?.name) // 인증 성공 시 대학교 이름 반환
+    }
     /**
      * 이메일 인증 코드 확인 (Redis에서 코드 검증)
      */

@@ -42,6 +42,12 @@ logging:
   level:
     org:
       springframework:
-        data:
-          mongodb: DEBUG
-      mongodb: DEBUG
+        security: DEBUG
+#        data:
+#          mongodb: DEBUG
+#      mongodb: DEBUG
+
+
+jwt:
+  expiration: 86400000 #1일
+  secret: ${JWT_SECRET}

@@ -1,13 +1,199 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 테스트</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    input, select, button {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #message {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+<h1>회원가입 테스트</h1>
+
+<!-- 아이디 중복 체크 -->
+<h2>아이디 중복 체크</h2>
+<input type="text" id="loginId" placeholder="아이디">
+<button onclick="checkLoginId()">아이디 중복 확인</button>
+
+<!-- 회원 정보 입력 -->
+<h2>회원 정보 입력</h2>
+<input type="password" id="password" placeholder="비밀번호">
+<input type="text" id="name" placeholder="이름">
+<input type="text" id="phoneNumber" placeholder="전화번호">
+<input type="email" id="email" placeholder="이메일">
+<button onclick="sendEmail()">이메일 인증 코드 전송</button>
+
+<!-- 이메일 인증 -->
+<h2>이메일 인증</h2>
+<input type="text" id="verificationCode" placeholder="인증 코드">
+<button onclick="verifyEmail()">이메일 인증 확인</button>
+
+<!-- 대학교 및 기숙사 선택 -->
+<h2>대학교 및 기숙사 선택</h2>
+<select id="university" disabled></select>
+<select id="dormitory" disabled></select>
+
+<!-- 회원가입 버튼 -->
+<button onclick="signUp()">회원가입</button>
+
+<!-- 메시지 출력 -->
+<div id="message"></div>
+
+<script>
+  const API_BASE_URL = "http://localhost:8080";
+
+  async function checkLoginId() {
+    const loginId = document.getElementById("loginId").value;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/member/check-login-id?loginId=${loginId}`);
+      const data = await response.json();
+      if (data.success) {
+        showMessage(data.message);
+      } else {
+        showMessage("이미 사용 중인 아이디입니다.");
+      }
+    } catch (error) {
+      showMessage("아이디 중복 확인 중 오류 발생");
+      console.error(error);
+    }
+  }
+
+  async function sendEmail() {
+    const email = document.getElementById("email").value;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/email/send`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      showMessage(data.message);
+    } catch (error) {
+      showMessage("이메일 전송 중 오류 발생");
+      console.error(error);
+    }
+  }
+
+  async function verifyEmail() {
+    const email = document.getElementById("email").value;
+    const code = document.getElementById("verificationCode").value;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/email/auth?receiver=${email}&code=${code}`);
+      const data = await response.json();
+      if (data.success) {
+        showMessage("이메일 인증 성공!");
+        loadUniversity(email.split("@")[1]); // 이메일 도메인으로 대학교 조회
+      } else {
+        showMessage(data.message);
+      }
+    } catch (error) {
+      showMessage("이메일 인증 중 오류 발생");
+      console.error(error);
+    }
+  }
+
+  async function loadUniversity(emailDomain) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/university/find?emailDomain=${emailDomain}`);
+      const university = await response.json();
+
+      if (university) {
+        const universitySelect = document.getElementById("university");
+        universitySelect.innerHTML = `<option value="${university.name}">${university.name}</option>`;
+        universitySelect.disabled = false;
+
+        loadDormitories(university.name);
+      } else {
+        showMessage("해당 도메인에 대한 대학교를 찾을 수 없습니다.");
+      }
+    } catch (error) {
+      showMessage("대학교 조회 중 오류 발생");
+      console.error(error);
+    }
+  }
+
+  async function loadDormitories(universityName) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/university/dormitories?universityName=${universityName}`);
+      const dormitories = await response.json();
+
+      const dormitorySelect = document.getElementById("dormitory");
+      dormitorySelect.innerHTML = dormitories.data
+              .map(dorm => `<option value="${dorm}">${dorm}</option>`)
+              .join("");
+      dormitorySelect.disabled = false;
+
+      showMessage("기숙사 목록 로드 완료");
+    } catch (error) {
+      showMessage("기숙사 조회 중 오류 발생");
+      console.error(error);
+    }
+  }
+
+  async function signUp() {
+    const requestData = {
+      loginId: document.getElementById("loginId").value,
+      password: document.getElementById("password").value,
+      name: document.getElementById("name").value,
+      phoneNumber: document.getElementById("phoneNumber").value,
+      email: document.getElementById("email").value,
+      university: document.getElementById("university").value,
+      dormitory: document.getElementById("dormitory").value,
+    };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/member/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        showMessage(`회원가입 성공! 메시지: ${data.message}`);
+      } else {
+        const errorData = await response.json();
+        showMessage(`회원가입 실패! 메시지: ${errorData.message}`);
+      }
+    } catch (error) {
+      showMessage("회원가입 중 오류 발생");
+      console.error(error);
+    }
+  }
+
+  function showMessage(msg) {
+    document.getElementById("message").innerText = msg;
+  }
+</script>
+</body>
 </html>

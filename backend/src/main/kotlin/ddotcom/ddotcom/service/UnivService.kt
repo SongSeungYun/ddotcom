@@ -43,4 +43,11 @@ class UnivService(
 
         return "대학교가 성공적으로 등록되었습니다."
     }
+
+    // 대학교 이름으로 기숙사 목록 조회 (추가 메서드)
+    fun getDormitoriesByUniversity(universityName: String): List<String> {
+        val query = Query(Criteria.where("name").`is`(universityName))
+        val university = univMongoTemplate.findOne(query, University::class.java, "universities")
+        return university?.dormitories ?: emptyList()
+    }
 }

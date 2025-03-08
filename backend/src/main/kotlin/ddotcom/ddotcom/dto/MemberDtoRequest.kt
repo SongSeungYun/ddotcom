@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Pattern
 
 data class MemberDtoRequest(
     @field:NotBlank
-    @JsonProperty("login_id")
+    @JsonProperty("loginId")
     private val _loginId: String?,
 
     @field:NotBlank
