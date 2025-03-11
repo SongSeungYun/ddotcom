@@ -1,5 +1,6 @@
 package ddotcom.ddotcom.entity
 
+import ddotcom.ddotcom.common.status.ROLE
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
@@ -34,5 +35,8 @@ data class Member(
     val university: String,
 
     @Field("dormitory")
-    val dormitory: String
+    val dormitory: String,
+
+    @Field("role")
+    val role: ROLE
 )

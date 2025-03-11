@@ -2,6 +2,7 @@ package ddotcom.ddotcom.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import ddotcom.ddotcom.common.annotation.ValidEnum
+import ddotcom.ddotcom.common.status.ROLE
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
@@ -40,7 +41,11 @@ data class MemberDtoRequest(
 
     @field:NotBlank
     @JsonProperty("dormitory")
-    private val _dormitory: String?
+    private val _dormitory: String?,
+
+    @ValidEnum(enumClass = ROLE::class, message = "유효하지 않은 ROLE 값입니다.")
+    @JsonProperty("role")
+    private val _role: ROLE?
 ){
     val loginId: String
         get() = _loginId!!
@@ -56,4 +61,21 @@ data class MemberDtoRequest(
         get() = _university!!
     val dormitory: String
         get() = _dormitory!!
+    val role: ROLE
+        get() = _role!!
+}
+
+data class LoginDto(
+    @field:NotBlank
+    @JsonProperty("loginId")
+    private val _loginId: String?,
+
+    @field:NotBlank
+    @JsonProperty("password")
+    private val _password: String?,
+) {
+    val loginId: String
+        get() = _loginId!!
+    val password: String
+        get() = _password!!
 }

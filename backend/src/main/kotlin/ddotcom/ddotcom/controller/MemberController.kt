@@ -1,9 +1,11 @@
 package ddotcom.ddotcom.controller
 
+import ddotcom.ddotcom.dto.LoginDto
 import ddotcom.ddotcom.dto.MemberDtoRequest
 import ddotcom.ddotcom.dto.ResponseWrapper
 import ddotcom.ddotcom.service.EmailService
 import ddotcom.ddotcom.service.MemberService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,7 +19,7 @@ class MemberController(
 ) {
     //회원가입
     @PostMapping("/signup")
-    fun signUp(@RequestBody memberDtoRequest: MemberDtoRequest): ResponseEntity<ResponseWrapper<String>> {
+    fun signUp(@Valid @RequestBody memberDtoRequest: MemberDtoRequest): ResponseEntity<ResponseWrapper<String>> {
         val resultMessage = memberService.signUp(memberDtoRequest)
         return ResponseEntity.ok(
             ResponseWrapper(
@@ -70,5 +72,32 @@ class MemberController(
                 data = universityName // 매핑된 대학교 이름 반환
             )
         )
+    }
+
+    @PostMapping("/login")
+    fun login(@RequestBody loginDto: LoginDto): ResponseEntity<ResponseWrapper<String?>> {
+        val result = memberService.login(loginDto)
+
+        return if (result.startsWith("잘못된 로그인 아이디") || result.startsWith("로그인 아이디와 비밀번호는")) {
+            ResponseEntity.ok(
+                ResponseWrapper(
+                    request = null,
+                    status = HttpStatus.OK,
+                    success = false,
+                    message = result,
+                    data = null
+                )
+            )
+        } else {
+            ResponseEntity.ok(
+                ResponseWrapper(
+                    request = null,
+                    status = HttpStatus.OK,
+                    success = true,
+                    message = "로그인 성공",
+                    data = result // JWT 토큰 반환
+                )
+            )
+        }
     }
 }

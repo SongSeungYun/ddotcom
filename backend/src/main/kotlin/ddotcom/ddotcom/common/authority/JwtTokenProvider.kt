@@ -5,17 +5,19 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import io.jsonwebtoken.Claims
 import jakarta.annotation.PostConstruct
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
 import java.security.Key
 import java.util.Date
 
 @Component
-class JwtUtil {
+class JwtTokenProvider {
 
     @Value("\${jwt.secret}")
     private lateinit var originKey: String
-
     private lateinit var secretKey: Key
 
     @Value("\${jwt.expiration}")
@@ -33,15 +35,16 @@ class JwtUtil {
     /**
      * JWT 생성
      */
-    fun generateToken(username: String): String {
+    fun generateToken(username: String, roles: List<String>): String {
         val now = Date()
         val expirationDate = Date(now.time + expirationTime)
 
         return Jwts.builder()
             .setSubject(username)
+            .claim("roles", roles) // 권한 정보 추가
             .setIssuedAt(now)
             .setExpiration(expirationDate)
-            .signWith(secretKey, SignatureAlgorithm.HS256) // 수정된 메서드 사용
+            .signWith(secretKey, SignatureAlgorithm.HS256)
             .compact()
     }
 
@@ -58,5 +61,13 @@ class JwtUtil {
         } catch (e: Exception) {
             null // 토큰이 유효하지 않으면 null 반환
         }
+    }
+
+    fun getAuthentication(token: String): UsernamePasswordAuthenticationToken {
+        val claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).body
+        val username = claims.subject
+        val roles = claims["roles"] as? List<*>?
+        val authorities = roles!!.filterIsInstance<String>().map { SimpleGrantedAuthority(it) }
+        return UsernamePasswordAuthenticationToken(username, null, authorities)
     }
 }

@@ -1,6 +1,5 @@
 package ddotcom.ddotcom.common.authority
 
-import ddotcom.ddotcom.common.authority.JwtUtil
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
@@ -9,10 +8,11 @@ import org.springframework.web.filter.OncePerRequestFilter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 @Component
 class JwtAuthFilter(
-    private val jwtUtil: JwtUtil,
+    private val jwtTokenProvider: JwtTokenProvider,
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(
@@ -20,20 +20,29 @@ class JwtAuthFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authHeader = request.getHeader("Authorization")
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            val token = authHeader.substring(7)
-            val claims = jwtUtil.validateToken(token)
+        val token = resolveToken(request)
+
+        if (token != null) {
+            val claims = jwtTokenProvider.validateToken(token)
 
             if (claims != null) {
                 val username = claims.subject
-                val authentication = UsernamePasswordAuthenticationToken(
-                    username, null, emptyList() // 권한 설정 가능
-                )
+                val roles = claims["roles"] as? List<*>? ?: emptyList<Any>()
+                val authorities = roles.filterIsInstance<String>().map { SimpleGrantedAuthority(it) }
+
+                val authentication = UsernamePasswordAuthenticationToken(username, null, authorities)
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
             }
         }
         filterChain.doFilter(request, response)
+    }
+
+    //AUthrozation헤더에 포함된 jwt 토큰 추출
+    private fun resolveToken(request: HttpServletRequest): String? {
+        val bearerToken = request.getHeader("Authorization")
+        return if (!bearerToken.isNullOrBlank() && bearerToken.startsWith("Bearer ")) {
+            bearerToken.substring(7)
+        } else null
     }
 }
