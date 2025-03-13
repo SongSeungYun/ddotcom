@@ -20,8 +20,9 @@ class SecurityConfig{
         http
             .csrf { it.disable() } // CSRF 비활성화
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("api/member/login","/api/member/signup", "/api/member/check-login-id", "/api/member/verify-email").permitAll()
-                auth.requestMatchers("/api/member/**").authenticated()
+                auth.requestMatchers("/api/member/login","/api/member/signup", "/api/member/check-login-id", "/api/member/verify-email", "/error").permitAll()
+                auth.requestMatchers("/api/member/my-info").hasAuthority("MEMBER")
+                auth.requestMatchers("/api/member/**").hasAuthority("MEMBER")
                 auth.requestMatchers("/api/email/**").permitAll()
                 auth.requestMatchers("/api/university/find", "/api/university/dormitories").permitAll()
                 auth.requestMatchers("/api/university/add").hasRole("ADMIN")

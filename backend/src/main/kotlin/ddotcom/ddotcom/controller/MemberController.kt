@@ -1,13 +1,18 @@
 package ddotcom.ddotcom.controller
 
+import ddotcom.ddotcom.common.dto.BaseResponse
+import ddotcom.ddotcom.common.exception.InvalidInputException
 import ddotcom.ddotcom.dto.LoginDto
 import ddotcom.ddotcom.dto.MemberDtoRequest
+import ddotcom.ddotcom.dto.MemberDtoResponse
 import ddotcom.ddotcom.dto.ResponseWrapper
 import ddotcom.ddotcom.service.EmailService
 import ddotcom.ddotcom.service.MemberService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/member")
@@ -35,7 +40,7 @@ class MemberController(
     //로그인 아이디 중복 체크하기
     @GetMapping("/check-login-id")
     fun checkLoginId(@RequestParam loginId: String): ResponseEntity<ResponseWrapper<Boolean>> {
-        val isAvailable = memberService.isLoginIdAvailable(loginId)
+        val isAvailable = memberService.checkLoginIdAvailability(loginId)
         return ResponseEntity.ok(
             ResponseWrapper(
                 request = null,
@@ -99,5 +104,21 @@ class MemberController(
                 )
             )
         }
+    }
+
+    @GetMapping("/my-info")
+    fun getMyInfo(@AuthenticationPrincipal username: String): MemberDtoResponse {
+        println("🔵 현재 로그인한 사용자: $username")
+        val member = memberService.getMemberByLoginId(username)
+            ?: throw InvalidInputException("loginId", "회원 정보를 찾을 수 없습니다.")
+
+        return MemberDtoResponse(
+            loginId = member.loginId,
+            name = member.name,
+            phoneNumber = member.phoneNumber,
+            email = member.email,
+            university = member.university,
+            dormitory = member.dormitory
+        )
     }
 }

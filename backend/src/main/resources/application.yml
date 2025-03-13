@@ -43,6 +43,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+        web: DEBUG
 #        data:
 #          mongodb: DEBUG
 #      mongodb: DEBUG

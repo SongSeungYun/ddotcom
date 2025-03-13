@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Pattern
 
 //import java.time.LocalDate
 
+//회원가입 dto
 data class MemberDtoRequest(
     @field:NotBlank
     @JsonProperty("loginId")
@@ -65,6 +66,7 @@ data class MemberDtoRequest(
         get() = _role!!
 }
 
+//로그인 dto
 data class LoginDto(
     @field:NotBlank
     @JsonProperty("loginId")
@@ -79,3 +81,13 @@ data class LoginDto(
     val password: String
         get() = _password!!
 }
+
+//내 정보 조회시 응답 dto
+data class MemberDtoResponse(
+    val loginId: String,
+    val name:String,
+    val phoneNumber: String,
+    val email: String,
+    val university: String,
+    val dormitory: String
+)

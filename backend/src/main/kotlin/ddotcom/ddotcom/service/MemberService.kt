@@ -2,10 +2,13 @@ package ddotcom.ddotcom.service
 
 //import ddotcom.ddotcom.database.MultipleMongoConfig
 import ddotcom.ddotcom.common.authority.JwtTokenProvider
+import ddotcom.ddotcom.common.exception.InvalidInputException
 import ddotcom.ddotcom.common.status.ROLE
 import ddotcom.ddotcom.dto.LoginDto
 import ddotcom.ddotcom.dto.MemberDtoRequest
+import ddotcom.ddotcom.dto.MemberDtoResponse
 import ddotcom.ddotcom.entity.Member
+import ddotcom.ddotcom.repository.MemberRepositoryImpl
 //import ddotcom.ddotcom.member.repository.MemberRepository
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -21,25 +24,16 @@ class MemberService(
     @Qualifier("productMongoTemplate") private val productMongoTemplate: MongoTemplate,
     private val authenticationManagerBuilder: AuthenticationManagerBuilder,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val memberRepository: MemberRepositoryImpl
 ) {
-    //Id중복 확인
-    fun findMemberByLoginId(loginId: String): Member? {
-        val query = Query(Criteria.where("loginId").`is`(loginId))
-        return memberMongoTemplate.findOne(query, Member::class.java, "member_info")
+    fun getMemberByLoginId(loginId: String): Member? {
+        return memberRepository.findMemberByLoginId(loginId)
     }
 
-    fun isLoginIdAvailable(loginId: String): Boolean {
-        try {
-            val query = Query(Criteria.where("loginId").`is`(loginId))
-            val member = memberMongoTemplate.findOne(query, Member::class.java, "member_info")
-            return member == null
-        } catch (e: Exception) {
-            println("Error checking login ID availability: $e")
-            return false
-        }
+    fun checkLoginIdAvailability(loginId: String): Boolean {
+        return memberRepository.isLoginIdAvailable(loginId)
     }
-
     //회원가입
     fun signUp(memberDtoRequest: MemberDtoRequest): String {
         println("Received DTO: $memberDtoRequest") // 디버깅용 로그 추가
@@ -55,7 +49,7 @@ class MemberService(
             return "필수 입력값이 누락되었습니다."
         }
         // loginId 중복 확인
-        if (!isLoginIdAvailable(memberDtoRequest.loginId)) {
+        if (!memberRepository.isLoginIdAvailable(memberDtoRequest.loginId)) {
             return "이미 등록된 아이디입니다."
         }
 

@@ -13,11 +13,11 @@ class CustomException(
 ) : RuntimeException(message){
     @ExceptionHandler(JwtException::class)
     fun handleJwtException(e: JwtException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 JWT 토큰입니다.")
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 JWT 토큰입니다. : ${e.message}")
     }
 
     @ExceptionHandler(AuthenticationException::class)
     fun handleAuthenticationException(e: AuthenticationException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 실패")
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 실패 : ${e.message}")
     }
 }
