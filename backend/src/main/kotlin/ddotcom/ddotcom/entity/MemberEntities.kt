@@ -18,10 +18,10 @@ data class Member(
 
     @Indexed(unique = true)
     @Field("loginId")
-    val loginId: String,      // 로그인용 ID
+    var loginId: String,      // 로그인용 ID
 
     @Field("password")
-    val password: String,
+    var password: String,
 
     @Field("name")
     val name: String,
@@ -39,8 +39,11 @@ data class Member(
     val dormitory: String,
 
     @Field("role")
-    val role: ROLE
+    val role: ROLE,
+
+    @Field("nickname")
+    var nickname: String
 ){
     fun toDto(): MemberDtoResponse =
-        MemberDtoResponse(loginId, name, phoneNumber, email, university, dormitory)
+        MemberDtoResponse(loginId, name, phoneNumber, email, university, dormitory, nickname)
 }

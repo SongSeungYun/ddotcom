@@ -26,4 +26,15 @@ class MemberRepositoryImpl(
             false
         }
     }
+
+    override fun isNicknameAvailable(nickname: String): Boolean {
+        return try {
+            val query = Query(Criteria.where("nickname").`is`(nickname))
+            val member = mongoTemplate.findOne(query, Member::class.java, "member_info")
+            member == null
+        } catch (e: Exception) {
+            println("Error checking login ID availability: $e")
+            false
+        }
+    }
 }

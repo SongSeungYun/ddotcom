@@ -46,7 +46,14 @@ data class MemberDtoRequest(
 
     @ValidEnum(enumClass = ROLE::class, message = "유효하지 않은 ROLE 값입니다.")
     @JsonProperty("role")
-    private val _role: ROLE?
+    private val _role: ROLE?,
+
+    @JsonProperty("nickname")
+    @field:Pattern(
+        regexp = "^[가-힣a-zA-Z0-9]{2,20}$",
+        message = "닉네임은 한글, 영문, 숫자로 이루어진 2~20자리여야 합니다."
+    )
+    private val _nickname: String?,
 ){
     val loginId: String
         get() = _loginId!!
@@ -64,6 +71,8 @@ data class MemberDtoRequest(
         get() = _dormitory!!
     val role: ROLE
         get() = _role!!
+    val nickname: String
+        get() = _nickname!!
 }
 
 //로그인 dto
@@ -89,5 +98,29 @@ data class MemberDtoResponse(
     val phoneNumber: String,
     val email: String,
     val university: String,
-    val dormitory: String
+    val dormitory: String,
+    val nickname: String
+)
+
+data class NicknameUpdateRequest(
+    @field:NotBlank(message = "닉네임은 비어있으면 안됩니다.")
+    @field:Pattern(
+        regexp = "^[가-힣a-zA-Z0-9]{2,20}$",
+        message = "닉네임은 한글, 영문, 숫자로 이루어진 2~20자리여야 합니다."
+    )
+    val newNickname: String
+)
+
+data class LoginIdUpdateRequest(
+    @field:NotBlank(message = "로그인 아이디는 비어있으면 안됩니다.")
+    @field:Pattern(
+        regexp = "^[a-zA-Z0-9]{5,20}$",
+        message = "로그인 아이디는 영문과 숫자로 이루어진 5~20자리여야 합니다."
+    )
+    val newLoginId: String
+)
+
+data class PasswordUpdateRequest(
+    val currentPassword: String, // 현재 비밀번호
+    val newPassword: String      // 새 비밀번호
 )
