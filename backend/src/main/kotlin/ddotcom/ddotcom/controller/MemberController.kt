@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/member")
 @RestController
-@CrossOrigin(origins = ["http://localhost:5173"])
 class MemberController(
     private val memberService: MemberService,
     private val emailService: EmailService
@@ -44,15 +43,6 @@ class MemberController(
                 )
             )
         }
-//        return ResponseEntity.ok(
-//            ResponseWrapper(
-//                request = null,
-//                status = HttpStatus.OK,
-//                success = true,
-//                message = resultMessage,
-//                data = null
-//            )
-//        )
     }
 
     //로그인 아이디 중복 체크하기
@@ -65,6 +55,20 @@ class MemberController(
                 status = HttpStatus.OK,
                 success = true,
                 message = if (isAvailable) "사용 가능한 아이디입니다." else "이미 사용 중인 아이디입니다.",
+                data = isAvailable
+            )
+        )
+    }
+
+    @GetMapping("/check-nickname")
+    fun checknickname(@RequestParam nickname: String): ResponseEntity<ResponseWrapper<Boolean>> {
+        val isAvailable = memberService.checkNicknameAvailability(nickname)
+        return ResponseEntity.ok(
+            ResponseWrapper(
+                request = null,
+                status = HttpStatus.OK,
+                success = true,
+                message = if (isAvailable) "사용 가능한 닉네임입니다." else "이미 사용 중인 닉네임입니다.",
                 data = isAvailable
             )
         )

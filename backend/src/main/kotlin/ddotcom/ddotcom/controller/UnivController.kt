@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/university")
 @RestController
-@CrossOrigin(origins = ["http://localhost:5173"])
 class UnivController(
     private val univService: UnivService
 ) {
