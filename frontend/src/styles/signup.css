@@ -1,3 +1,16 @@
-form {
+.signup-form {
     max-width: 600px;
+    margin: auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.signup-form h1 {
+    text-align: center;
+}
+
+.signup-form select {
+    width: calc(100% - 24px);
 }

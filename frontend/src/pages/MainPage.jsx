@@ -4,6 +4,7 @@ import Banner from "../components/Banner";
 import ProductList from "../components/ProductList";
 import Footer from "../components/Footer";
 import "../styles/mainpage.css";
+import "../styles/global.css";
 
 const MainPage = () => {
     // 샘플 상품 데이터

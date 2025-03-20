@@ -5,6 +5,8 @@ import Input from "../components/Input"; // 수정된 Input 컴포넌트 사용
 import Button from "../components/Button";
 import useValidation from "../hooks/useValidation";
 import axios from "axios";
+import "../styles/signup.css";
+import "../styles/global.css";
 
 const SignupPage = () => {
     const [formData, setFormData] = useState({
