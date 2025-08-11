@@ -48,7 +48,6 @@ logging:
 #          mongodb: DEBUG
 #      mongodb: DEBUG
 
-
 jwt:
   expiration: 86400000 #1일
   secret: ${JWT_SECRET}
